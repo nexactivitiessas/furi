@@ -1,1 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>C-Panel · Tienda Furi</title>
+  <link rel="stylesheet" href="assets/admin.css">
+</head>
+<body>
+  <!-- Login -->
+  <div id="loginView" class="login-wrap" hidden>
+    <form id="loginForm" class="login-card">
+      <h1>Tienda Furi</h1>
+      <p class="muted">Panel de administración</p>
+      <label>Usuario<input name="usuario" autocomplete="username" required></label>
+      <label>Contraseña<input type="password" name="password" autocomplete="current-password" required></label>
+      <div id="loginErr" class="err"></div>
+      <button class="btn" type="submit">Ingresar</button>
+    </form>
+  </div>
 
+  <!-- App -->
+  <div id="appView" class="layout" hidden>
+    <aside class="sidebar">
+      <div class="side-brand">Tienda Furi<small>C-Panel</small></div>
+      <nav id="sideNav"></nav>
+      <div class="side-foot">
+        <span id="sideUser"></span>
+        <button id="logoutBtn" class="btn btn-ghost btn-sm">Salir</button>
+      </div>
+    </aside>
+    <main class="content">
+      <div id="view"><div class="loading">Cargando...</div></div>
+    </main>
+  </div>
+
+  <div id="modalRoot"></div>
+  <div id="toastRoot"></div>
+
+  <script defer src="../assets/js/config.js"></script>
+  <script defer src="../assets/js/api.js"></script>
+  <script defer src="assets/admin.js"></script>
+</body>
+</html>
