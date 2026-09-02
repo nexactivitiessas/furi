@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catálogo</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="wrap section">
+    <div class="pagehead">
+      <div class="breadcrumb"><a href="index.html">Inicio</a> / <span id="crumb">Catálogo</span></div>
+      <h1 id="catTitle">Catálogo</h1>
+    </div>
+
+    <div class="catalog">
+      <div class="toolbar">
+        <button class="btn btn-ghost btn-sm filters-toggle" id="filtersToggle">Filtros</button>
+        <span class="count" id="resultCount"></span>
+        <label>Ordenar por:
+          <select id="ordenSelect">
+            <option value="relevancia">Relevancia</option>
+            <option value="precio_asc">Menor precio</option>
+            <option value="precio_desc">Mayor precio</option>
+            <option value="nuevos">Más nuevos</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="results"><div class="loading">Cargando productos...</div></div>
+
+      <aside class="filters" id="filters"></aside>
+
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script defer src="assets/js/config.js"></script>
+  <script defer src="assets/js/api.js"></script>
+  <script defer src="assets/js/store.js"></script>
+  <script defer src="assets/js/ui.js"></script>
+  <script defer src="assets/js/render.js"></script>
+  <script defer src="assets/js/catalogo.js"></script>
+</body>
+</html>

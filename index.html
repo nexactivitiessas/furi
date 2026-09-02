@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inicio</title>
+  <meta name="description" content="Repuestos y accesorios para motos. Envíos a todo el país.">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main>
+    <section class="hero" id="hero">
+      <div class="wrap">
+        <h1 id="heroTitle">Repuestos y accesorios para tu moto</h1>
+        <p id="heroText">Las mejores marcas, con envío a todo el país y atención personalizada.</p>
+        <a class="btn btn-lg" href="catalogo.html">Ver catálogo</a>
+      </div>
+    </section>
+
+    <section class="section wrap" id="statsSection" hidden>
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <section class="section wrap">
+      <h2>Productos destacados</h2>
+      <div class="product-grid" id="destacados"><div class="loading">Cargando...</div></div>
+      <p class="center" style="margin-top:26px"><a class="btn btn-ghost" href="catalogo.html">Ver todos los productos</a></p>
+    </section>
+
+    <section class="section" style="background:var(--bg-soft)">
+      <div class="wrap">
+        <h2 class="center">Marcas oficiales</h2>
+        <div class="brands-row" id="brands"></div>
+      </div>
+    </section>
+
+    <section class="section wrap" id="nosotros">
+      <h2>Sobre nosotros</h2>
+      <div id="sobreNosotros" class="muted"></div>
+      <div class="product-grid" id="equipo" style="margin-top:26px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))"></div>
+    </section>
+
+    <section class="section" id="contacto" style="background:var(--bg-soft)">
+      <div class="wrap" style="max-width:680px">
+        <h2>Contacto</h2>
+        <p class="muted">Escribinos y te respondemos a la brevedad.</p>
+        <form id="contactForm" class="card-box" style="background:#fff">
+          <div class="form-grid">
+            <div class="field"><label>Nombre *</label><input name="Nombre" required></div>
+            <div class="field"><label>Email</label><input type="email" name="Email"></div>
+            <div class="field"><label>Teléfono</label><input name="Telefono"></div>
+            <div class="field"><label>Asunto</label><input name="Asunto"></div>
+            <div class="field col-2"><label>Mensaje *</label><textarea name="Mensaje" rows="4" required></textarea></div>
+          </div>
+          <button class="btn btn-block" type="submit" style="margin-top:16px">Enviar consulta</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script defer src="assets/js/config.js"></script>
+  <script defer src="assets/js/api.js"></script>
+  <script defer src="assets/js/store.js"></script>
+  <script defer src="assets/js/ui.js"></script>
+  <script defer src="assets/js/render.js"></script>
+  <script defer src="assets/js/home.js"></script>
+</body>
+</html>
