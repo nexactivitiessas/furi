@@ -151,7 +151,7 @@
   }
 
   function mountWhatsApp(cfg) {
-    var num = (cfg.WhatsApp || (F.config && F.config.WHATSAPP_FALLBACK) || '').replace(/[^\d]/g, '');
+    var num = String(cfg.WhatsApp || (F.config && F.config.WHATSAPP_FALLBACK) || '').replace(/[^\d]/g, '');
     if (!num) return;
     var a = document.createElement('a');
     a.className = 'wa-float';
