@@ -7,10 +7,26 @@
   var SES_KEY = 'furi_admin_v1';
 
   // ------------------------------------------------------------------ Sesión
+  // Usa localStorage cuando se puede; si el navegador lo bloquea (modo privado,
+  // escudos de privacidad, cookies deshabilitadas) cae a memoria: la sesión dura
+  // hasta que se cierre la pestaña, pero el login NO falla en silencio.
+  var _memSession = null;
   var Session = {
-    get: function () { try { return JSON.parse(localStorage.getItem(SES_KEY)); } catch (e) { return null; } },
-    set: function (v) { localStorage.setItem(SES_KEY, JSON.stringify(v)); },
-    clear: function () { localStorage.removeItem(SES_KEY); },
+    get: function () {
+      try {
+        var raw = localStorage.getItem(SES_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      return _memSession;
+    },
+    set: function (v) {
+      _memSession = v;
+      try { localStorage.setItem(SES_KEY, JSON.stringify(v)); } catch (e) {}
+    },
+    clear: function () {
+      _memSession = null;
+      try { localStorage.removeItem(SES_KEY); } catch (e) {}
+    },
     token: function () { var s = this.get(); return s && s.token; },
     valido: function () { var s = this.get(); return s && s.token && (!s.expira || s.expira > Date.now()); },
     esSuper: function () { var s = this.get(); return s && String(s.rol).toLowerCase() === 'superadmin'; }
@@ -381,7 +397,8 @@
         { name: 'Activo', label: 'Activo (visible en la tienda)', type: 'checkbox' }
       ];
       var dataForm = Object.assign({}, p);
-      dataForm.GaleriaURLs = String(p.GaleriaURLs || '').split(/\s*\|\s*/).filter(Boolean).join('\n');
+      // Tolerante a datos viejos separados por "|", coma o espacio: siempre los repone uno por línea.
+      dataForm.GaleriaURLs = String(p.GaleriaURLs || '').split(/[|,\s]+/).filter(Boolean).join('\n');
       if (!p.ID) dataForm.Activo = true;
 
       var extra =
@@ -393,7 +410,8 @@
       var m = modal((p.ID ? 'Editar' : 'Nuevo') + ' producto', formHTML(campos, dataForm) + extra,
         async function (bodyEl, close) {
           var rec = collectForm(bodyEl, campos);
-          rec.GaleriaURLs = String(rec.GaleriaURLs || '').split(/\r?\n/).map(function (s) { return s.trim(); }).filter(Boolean).join(' | ');
+          // Acepta una URL por línea (lo normal) o pegadas con espacios/coma: separa por cualquiera de los tres.
+          rec.GaleriaURLs = String(rec.GaleriaURLs || '').split(/[\s,]+/).filter(Boolean).join(' | ');
           if (p.ID) rec.ID = p.ID;
           if (!p.ID) rec.FechaAlta = new Date().toISOString();
           var r = await apost('saveGenerico', { hoja: 'Productos', registro: rec });
