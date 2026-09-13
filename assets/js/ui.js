@@ -61,9 +61,64 @@
     mountWhatsApp(cfg);
     updateCartBadge();
     refreshSessionLink();
+    setupNavAutoHide();
 
     document.addEventListener('furi:cart-changed', updateCartBadge);
     document.addEventListener('furi:session-changed', refreshSessionLink);
+  }
+
+  /**
+   * Nav de categorías que se oculta al bajar y reaparece al subir (o al llegar
+   * arriba de todo). Se engancha una sola vez acá, así toda página que llame
+   * a renderChrome() lo hereda gratis, sin repetir la lógica.
+   */
+  function setupNavAutoHide() {
+    var nav = document.getElementById('mainnav');
+    if (!nav || nav.dataset.autohideWired) return;
+    nav.dataset.autohideWired = '1';
+
+    function medirAltura() {
+      // Se mide con la clase sacada para tomar la altura real (incluye filas
+      // que se envuelven en tablet), y queda como variable CSS propia del
+      // elemento para que la transición de max-height sea exacta.
+      // En mobile el nav arranca con display:none (colapsado tras el ☰) y ahí
+      // scrollHeight da 0: se ignora ese caso y se deja el fallback del CSS
+      // (bien generoso) en vez de pisarlo con un valor que lo dejaría a 0.
+      nav.classList.remove('nav-hidden');
+      var h = nav.scrollHeight;
+      if (h > 0) nav.style.setProperty('--mainnav-h', h + 'px');
+    }
+    medirAltura();
+
+    var resizeT;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeT);
+      resizeT = setTimeout(medirAltura, 150);
+    });
+
+    var lastScroll = window.scrollY || window.pageYOffset || 0;
+    var ticking = false;
+    var UMBRAL = 4; // px de tolerancia para ignorar el jitter de scroll inercial
+
+    function evaluar() {
+      var current = window.scrollY || window.pageYOffset || 0;
+      if (current <= 0) {
+        nav.classList.remove('nav-hidden');
+      } else if (current > lastScroll + UMBRAL) {
+        nav.classList.add('nav-hidden');
+      } else if (current < lastScroll - UMBRAL) {
+        nav.classList.remove('nav-hidden');
+      }
+      lastScroll = current;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        requestAnimationFrame(evaluar);
+        ticking = true;
+      }
+    }, { passive: true });
   }
 
   function mountHeader(cfg, cats) {
