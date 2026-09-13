@@ -148,7 +148,9 @@
     return '<div class="form-grid" style="margin:6px 0 14px">' +
       '<div class="field"><label>Provincia</label><input id="destProv" value="' + esc(destinoManual.Provincia) + '" placeholder="Ej: Córdoba"></div>' +
       '<div class="field"><label>Código postal</label><input id="destCP" value="' + esc(destinoManual.CodigoPostal) + '" placeholder="Ej: 5000"></div>' +
-      '<div class="field col-2"><button class="btn btn-sm" id="estimarBtn">Estimar envío</button></div>' +
+      '<div style="grid-column:1/-1;margin-top:2px">' +
+        '<button class="btn btn-sm" id="estimarBtn">Estimar envío</button>' +
+      '</div>' +
     '</div>';
   }
 
