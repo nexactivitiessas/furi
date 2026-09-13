@@ -98,16 +98,37 @@
 
     var lastScroll = window.scrollY || window.pageYOffset || 0;
     var ticking = false;
-    var UMBRAL = 4; // px de tolerancia para ignorar el jitter de scroll inercial
+    var accum = 0;      // acumulado en la dirección actual desde el último cambio de sentido
+    var dirActual = 0;  // 1 = bajando, -1 = subiendo, 0 = ninguna todavía
+    var OCULTAR_EN = 40; // px sostenidos bajando antes de ocultar (filtra el "rebote" del frenado inercial)
+    var MOSTRAR_EN = 24; // px sostenidos subiendo antes de disparar el "mostrar"
+    var mostrarT = null; // pequeño debounce: confirma que el "subir" no fue solo un rebote de inercia
 
     function evaluar() {
       var current = window.scrollY || window.pageYOffset || 0;
+      var diff = current - lastScroll;
+
       if (current <= 0) {
+        clearTimeout(mostrarT); mostrarT = null;
         nav.classList.remove('nav-hidden');
-      } else if (current > lastScroll + UMBRAL) {
-        nav.classList.add('nav-hidden');
-      } else if (current < lastScroll - UMBRAL) {
-        nav.classList.remove('nav-hidden');
+        accum = 0; dirActual = 0;
+      } else if (diff > 0) {
+        // bajando: cancela cualquier "mostrar" pendiente y arranca el acumulado de nuevo
+        clearTimeout(mostrarT); mostrarT = null;
+        accum = (dirActual === 1 ? accum : 0) + diff;
+        dirActual = 1;
+        if (accum > OCULTAR_EN) nav.classList.add('nav-hidden');
+      } else if (diff < 0) {
+        accum = (dirActual === -1 ? accum : 0) - diff;
+        dirActual = -1;
+        if (accum > MOSTRAR_EN && !mostrarT) {
+          // espera 120ms confirmando que se sigue subiendo antes de reaparecer:
+          // así un rebote breve del frenado por inercia no lo reabre solo.
+          mostrarT = setTimeout(function () {
+            mostrarT = null;
+            nav.classList.remove('nav-hidden');
+          }, 120);
+        }
       }
       lastScroll = current;
       ticking = false;
